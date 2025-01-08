@@ -1,3 +1,4 @@
+copy
 streamlit
 ultralytics
 opencv-python-headless
