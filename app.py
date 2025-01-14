@@ -36,7 +36,7 @@ def transliterate(results):
     return words
 
 
-def group_bounding_boxes_by_lines(bounding_boxes, line_tolerance=50):
+def group_bounding_boxes_by_lines(bounding_boxes, line_tolerance=75):
     # Sort berdasarkan y
     bounding_boxes = sorted(bounding_boxes, key=lambda box: float(box[1]))
 
@@ -370,9 +370,8 @@ def read_labels(labels):
         # if ('nya' in label or label == 'nga') and ('gantungan' in labels[id + 1]):
         #     label = ''.join((label[0], label[2:]))
         words.append(label)
-
     return ''.join(word for word in words).lower()
-    
+           
 
 def app():
     st.header('Tranliterasi Aksara Bali')
@@ -393,12 +392,16 @@ def app():
         before.image(image, caption=input_path, use_container_width='auto')
 
         results = model.predict(image, iou=0.5)
+        
         after.image(cv2.cvtColor(results[0].plot(), cv2.COLOR_BGR2RGB),
                  caption='Detected Objects.', use_container_width='auto')
         
-        words = transliterate(results)
-        for word in words:  
-            st.header(word)
+        try:
+            words = transliterate(results)
+            for word in words:  
+                st.header(word)
+        except Exception:
+            st.error('Maaf, gambar tidak bisa di transliterasi!')
     
 
 if __name__ == '__main__':
